@@ -1,0 +1,31 @@
+:root {
+    /* galaxy image from https://unsplash.com/s/photos/galaxy */
+    --bg-image: url("https://cdn.pixabay.com/photo/2022/07/28/08/42/space-7349412_1280.jpg");
+  }
+
+body {
+  background-color: #000000;
+  font-family: sans-serif;
+}
+
+
+.bg-blur {
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.bg-blur::before {
+  content: '';
+  background-image: var(--bg-image);
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  filter: blur(60px);
+  z-index: -1;
+}
+.fa-gradient {
+	background: linear-gradient(to right, #08b6f0, #ce0ce8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

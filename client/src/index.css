@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-gradient {
+    background: linear-gradient(to right, #08b6f0, #ce0ce8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .text-glow {
+    color:white;
+    text-shadow: 0 0 80px rgba(227, 230, 234, 0.75), 0 0 32px rgba(221, 222, 225, 0.568);
+  }
+
+
+  .act-tab{
+    font-family: sans-serif;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: rgba(var(--primary-color), 0.5) 0px 0px 20px 0px;
+      
+  }
+  .act-tab {
+    transition: all 0.3s ease;
+  }
+  
+  .act-tab:hover {
+    transition: all 0.3s ease;
+  }
+
+.active-tab-bg{
+    background-image: linear-gradient(to right, #08b6f088, #ce0ce89d);
+    color:white;
+    border-radius: 10px;
+}
+ 
