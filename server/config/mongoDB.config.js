@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const connectDB = () => {
   mongoose
-    .connect("mongodb://127.0.0.1:27017/finalProject")
+    .connect(process.env.MONGODB_URI)
     .then(() => console.log("Connected to finalProject"))
     .catch((error) => console.log(error));
 };

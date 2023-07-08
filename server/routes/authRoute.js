@@ -8,7 +8,7 @@ router.route("/login").post(async (req, res) => {
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
-    res.json(err.message);
+    res.status(401).json(err.message);
   }
 });
 
@@ -18,7 +18,7 @@ router.route("/refreshsession").post((req, res) => {
   if (result !== "Need To Login Again") {
     res.status(200).json(result);
   } else {
-    res.json(result);
+    res.status(401).json(result);
   }
 });
 

@@ -5,7 +5,7 @@ const employeeDB = require("../DALs/employeeDBService");
 
 router.route("/all").get(async (req, res) => {
   const response = await userService.getAllEmployees();
-  res.json(response);
+  res.status(200).json(response);
 });
 router.route("/:id").get(async (req, res) => {
   try {
@@ -17,7 +17,7 @@ router.route("/:id").get(async (req, res) => {
       throw Error("No ID");
     }
   } catch (err) {
-    res.json(err.message);
+    res.status(401).json(err.message);
   }
 });
 
@@ -26,23 +26,28 @@ router.route("/:id/newShift").post(async (req, res) => {
     const { newShift: shiftData } = req.body;
     const response = await userService.createNewShift(shiftData);
     res.status(200).json(response);
-  } catch (err) {}
+  } catch (err) {
+    res.status(401).json(err.message);
+  }
 });
 
 router.route("/:id/update").patch(async (req, res) => {
-  const { id, updatedInfo } = req.body;
-  const { firstName, lastName } = updatedInfo;
-  const updateResponse = await userService.updateUser({
-    id,
-    firstName,
-    lastName,
-  });
-  console.log(updateResponse);
-  res.json(updateResponse);
+  try {
+    const { id, updatedInfo } = req.body;
+    const { firstName, lastName } = updatedInfo;
+    const updateResponse = await userService.updateUser({
+      id,
+      firstName,
+      lastName,
+    });
+
+    res.status(200).json(updateResponse);
+  } catch (err) {
+    res.status(401).json(err.message);
+  }
 });
 router.route("/removeShift/:id").delete(async (req, res) => {
   const response = await userService.deleteShift(req.params.id);
-
-  res.json(response);
+  res.status(200).json(response);
 });
 module.exports = router;
