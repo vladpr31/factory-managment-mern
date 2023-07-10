@@ -2,8 +2,8 @@ const userWS = require("../DALs/userWS");
 const helper = require("../helpers/error-handler");
 const userService = require("../DALs/userDBService");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
+require("dotenv").config();
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.JWT_ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
@@ -51,7 +51,7 @@ const authenticateUser = async (credentials) => {
 const refreshToken = (tokens) => {
   const accessVerify = jwt.verify(
     tokens.access_token,
-    SOME_SECRET_JWT,
+    process.env.JWT_ACCESS_TOKEN_SECRET,
     (err, decoded) => {
       if (err) {
         if (err.message == "jwt expired") {
@@ -64,7 +64,7 @@ const refreshToken = (tokens) => {
   );
   const refreshVerify = jwt.verify(
     tokens.refresh_token,
-    SECRET_REFRESH_JWT,
+    process.env.JWT_REFRESH_TOKEN_SECRET,
     (err, decoded) => {
       if (err) {
         if (err.message == "jwt expired") {
@@ -90,6 +90,7 @@ const refreshToken = (tokens) => {
   if (refreshVerify == true && accessVerify == true) {
     return "Need To Login Again";
   } else {
+    console.log("returning refresh");
     return refreshVerify;
   }
 };

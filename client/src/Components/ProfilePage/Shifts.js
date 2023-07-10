@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Input from "../UI/Input";
 import Select from "react-select";
-import { createNewShift } from "../../Context/actions/userAction";
+import {
+  createNewShift,
+  updateShift,
+} from "../../Context/actions/shiftsAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import {
@@ -9,16 +12,22 @@ import {
   startLoadingData,
 } from "../../Context/actions/userAction";
 
-const Shifts = () => {
+const Shifts = ({ props }) => {
   const [showForm, setShowForm] = useState(false);
-  const { isLoading, allUsers, user } = useSelector((state) => state.user);
+  const { allUsers } = useSelector((state) => state.user);
   const [selectOptions, setSelectOptions] = useState([]);
   const navigate = useNavigate();
   const [shift, setShift] = useState({
-    date: null,
-    startingHour: null,
-    endingHour: null,
-    shiftWorkers: [{}],
+    date: props.currShiftEdited ? props.currShiftEdited[0].date : "",
+    startingHour: props.currShiftEdited
+      ? props.currShiftEdited[0].startingHour
+      : "",
+    endingHour: props.currShiftEdited
+      ? props.currShiftEdited[0].endingHour
+      : "",
+    shiftWorkers: props.currShiftEdited
+      ? props.currShiftEdited[0].shiftWorkers
+      : [{}],
   });
   const dispatch = useDispatch();
 
@@ -34,15 +43,29 @@ const Shifts = () => {
       }));
       setSelectOptions(selectOptions);
     }
-  }, [allUsers]);
+  }, [allUsers, props.currShiftEdited]);
 
   const newShiftHandler = (e) => {
     if (e.target) {
       const { id, value } = e.target;
-      setShift((prevState) => ({
-        ...prevState,
-        [id]: id === "shiftDate" ? new Date(value) : value,
-      }));
+      if (id === "shiftDate") {
+        setShift((prevState) => ({
+          ...prevState,
+          date: new Date(value),
+        }));
+      }
+      if (id === "startTime") {
+        setShift((prevState) => ({
+          ...prevState,
+          startingHour: new Date(prevState.date.toDateString() + " " + value),
+        }));
+      }
+      if (id === "endTime") {
+        setShift((prevState) => ({
+          ...prevState,
+          endingHour: new Date(prevState.date.toDateString() + " " + value),
+        }));
+      }
     } else {
       const selected = e.map((selectOption) => selectOption.value);
       setShift((prevState) => ({
@@ -51,15 +74,18 @@ const Shifts = () => {
       }));
     }
   };
-
   const createNewShiftHandler = async () => {
     dispatch(startLoadingData());
-    await dispatch(createNewShift(user.id, shift, navigate));
+    await dispatch(createNewShift(shift, navigate));
     dispatch(endLoadingData());
   };
-
+  const updateShiftHandler = async () => {
+    dispatch(startLoadingData());
+    await dispatch(updateShift(props.currShiftEdited[0]._id, shift, navigate));
+    dispatch(endLoadingData());
+  };
   return (
-    <div className="relative h-fit mx-auto w-full mt-6 p-4">
+    <div className="relative mx-auto w-full  p-4">
       <button
         className="text-white bg-blue-700 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
         type="button"
@@ -84,6 +110,11 @@ const Shifts = () => {
                   required: true,
                   id: "shiftDate",
                   onChangeHandler: newShiftHandler,
+                  inputValue: props?.currShiftEdited
+                    ? new Date(props.currShiftEdited[0].date)
+                        .toISOString()
+                        .split("T")[0]
+                    : shift.date,
                 }}
               />
               <Input
@@ -94,6 +125,11 @@ const Shifts = () => {
                   required: true,
                   id: "startTime",
                   onChangeHandler: newShiftHandler,
+                  inputValue: props?.currShiftEdited
+                    ? new Date(props.currShiftEdited[0].startingHour)
+                        .toTimeString()
+                        .split(" ")[0]
+                    : shift.startingHour,
                 }}
               />
               <Input
@@ -104,6 +140,11 @@ const Shifts = () => {
                   required: true,
                   id: "endTime",
                   onChangeHandler: newShiftHandler,
+                  inputValue: props?.currShiftEdited
+                    ? new Date(props.currShiftEdited[0].endingHour)
+                        .toTimeString()
+                        .split(" ")[0]
+                    : shift.endingHour,
                 }}
               />
             </form>
@@ -114,16 +155,28 @@ const Shifts = () => {
                 isMulti
                 options={selectOptions}
                 onChange={newShiftHandler}
-                id="workerSelect"
+                defaultValue={
+                  props.currShiftEdited
+                    ? selectOptions.filter(
+                        (option, index) =>
+                          option.value ===
+                          props?.currShiftEdited[0]?.shiftWorkers[index]?._id
+                      )
+                    : "Select.."
+                }
               />
             </div>
           </div>
           <div className="text-center">
             <button
               className="bg-blue-600 rounded-md text-glow h-fit w-fit p-3"
-              onClick={createNewShiftHandler}
+              onClick={
+                props?.allowEditShift
+                  ? updateShiftHandler
+                  : createNewShiftHandler
+              }
             >
-              Create Shift
+              {props?.allowEditShift ? "Update Shift" : "Create Shift"}
             </button>
           </div>
         </>

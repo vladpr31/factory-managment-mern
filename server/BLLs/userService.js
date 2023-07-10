@@ -1,31 +1,6 @@
-const DepartmentDAL = require("../DALs/departmentDBService");
 const EmployeeDAL = require("../DALs/employeeDBService");
 const UserDAL = require("../DALs/userDBService");
-const ShiftsDAL = require("../DALs/shiftsDBService");
-const userWS = require("../DALs/userWS");
 
-const createNewShift = async (payload) => {
-  try {
-    console.log("in userSerivce createShift:", payload);
-    const currShiftWorkers = payload.shiftWorkers;
-    const shift = await ShiftsDAL.createNewShift(payload);
-    currShiftWorkers.map((worker) => {
-      EmployeeDAL.updateEmployeeShifts(worker._id, shift._id);
-    });
-    return "Shift Created.";
-  } catch (err) {
-    return err.message;
-  }
-};
-const deleteShift = async (payload) => {
-  try {
-    await ShiftsDAL.deleteShift(payload);
-    await EmployeeDAL.deleteManyEmployeeShifts(payload);
-    return "Shifts Deleted";
-  } catch (err) {
-    return err.message;
-  }
-};
 const getAllEmployees = () => {
   return EmployeeDAL.getAllEmployees();
 };
@@ -72,10 +47,8 @@ const updateUser = (payload) => {
 };
 
 module.exports = {
-  createNewShift,
   getUserByName,
   getUserByID,
   getAllEmployees,
   updateUser,
-  deleteShift,
 };

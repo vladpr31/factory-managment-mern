@@ -6,14 +6,11 @@ import { useNavigate } from "react-router";
 const WorkersTab = () => {
   console.log("Workers Tab");
   const { isLoading, allUsers } = useSelector((state) => state.user);
-  useEffect(() => {
-    sessionStorage.setItem("viewingTab", JSON.stringify("Workers List"));
-  }, []);
 
   return isLoading ? (
     <h1>Loading Data...</h1>
   ) : (
-    <div className="mx-auto flex flex-wrap w-[50%] justify-center py-12 sm: w-[75%] ">
+    <div className="mx-auto flex flex-wrap w-[50%] justify-center py-20 sm: w-[75%] h-screen ">
       <h1 className="text-center p-5 text-[48px] sm: text-[24px] text-glow">
         All Workers List
       </h1>

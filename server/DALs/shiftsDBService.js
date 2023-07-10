@@ -1,5 +1,4 @@
 const Shifts = require("../models/shiftModal");
-const Employee = require("../models/employeeModal");
 //Shifts Functions
 
 const getAllShifts = () => {
@@ -8,7 +7,6 @@ const getAllShifts = () => {
 
 const createNewShift = async (shift) => {
   try {
-    console.log(shift);
     const newShift = Shifts.create(shift);
     (await newShift).save();
     return newShift;

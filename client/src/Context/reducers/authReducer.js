@@ -24,6 +24,8 @@ const authReducer = (state = initialState, action) => {
         localStorage.removeItem("profile");
         localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
         return { ...state, auth: action.data };
+      } else {
+        return state;
       }
       break;
     default:

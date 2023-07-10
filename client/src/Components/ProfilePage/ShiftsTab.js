@@ -1,29 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Shifts from "./Shifts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { deleteShift } from "../../Context/actions/shiftsAction";
 import {
-  deleteShift,
   endLoadingData,
   startLoadingData,
 } from "../../Context/actions/userAction";
 const ShiftsTab = ({ props }) => {
   const { auth } = useSelector((state) => state.auth);
   const { isLoading } = useSelector((state) => state.user);
+  const { shifts } = useSelector((state) => state.shifts);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    sessionStorage.setItem("viewingTab", JSON.stringify("Shifts"));
-  }, [isLoading]);
+  const [allowEditShift, setAllowEditShift] = useState(false);
 
+  const [currShiftEdited, setCurrShiftEdited] = useState(null);
   const deleteShiftHandler = async (shiftID) => {
     dispatch(startLoadingData());
     await dispatch(deleteShift(shiftID, navigate));
     dispatch(endLoadingData());
   };
+
+  const allowEditShiftHandler = async (shiftID) => {
+    setCurrShiftEdited(() => shifts?.filter((shift) => shift._id === shiftID));
+    setAllowEditShift(!allowEditShift);
+  };
+
   if (isLoading) {
     return <h1>Loading Shifts...</h1>;
   }
@@ -75,12 +81,27 @@ const ShiftsTab = ({ props }) => {
                   props?.lastName === props?.department?.manager?.lastName &&
                   props?.department?.manager?._id === auth?.id ? (
                     <button
-                      className="ml-2 hover:after:content-['Delete_Shift'] after:absolute after:ml-2 after:text-white "
+                      className="ml-2"
                       onClick={() => deleteShiftHandler(shift._id)}
                     >
                       <FontAwesomeIcon
                         icon={faTrash}
                         style={{ color: "#e71823", transform: "scale(1.2)" }}
+                      />
+                    </button>
+                  ) : null}
+                </td>
+                <td className="text-center">
+                  {props?.firstName === props?.department?.manager?.firstName &&
+                  props?.lastName === props?.department?.manager?.lastName &&
+                  props?.department?.manager?._id === auth?.id ? (
+                    <button
+                      className="ml-2 "
+                      onClick={() => allowEditShiftHandler(shift._id)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faPen}
+                        style={{ color: "#12a150" }}
                       />
                     </button>
                   ) : null}
@@ -92,18 +113,18 @@ const ShiftsTab = ({ props }) => {
         {props?.firstName === props?.department?.manager?.firstName &&
         props?.lastName === props?.department?.manager?.lastName &&
         props?.department?.manager?._id === auth?.id ? (
-          <Shifts />
+          <Shifts props={{ allowEditShift, currShiftEdited }} />
         ) : null}
       </div>
     );
   } else {
     return (
-      <div className="text-center flex flex-col justify-center w-fit flex-wrap mx-auto p-6 text-glow">
+      <div className="text-center flex flex-col justify-center w-fit flex-wrap mx-auto p-6 text-glow h-screen">
         <h1 className="text-[48px]">No Shifts Available Yet</h1>
         {props?.firstName === props?.department?.manager?.firstName &&
         props?.lastName === props?.department?.manager?.lastName &&
         props?.department?.manager?._id === auth?.id ? (
-          <Shifts />
+          <Shifts props={{ allowEditShift, currShiftEdited }} />
         ) : null}
       </div>
     );

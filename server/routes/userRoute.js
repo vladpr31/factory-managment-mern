@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const userService = require("../BLLs/userService");
-const employeeDB = require("../DALs/employeeDBService");
 
 router.route("/all").get(async (req, res) => {
   const response = await userService.getAllEmployees();
@@ -21,19 +20,10 @@ router.route("/:id").get(async (req, res) => {
   }
 });
 
-router.route("/:id/newShift").post(async (req, res) => {
-  try {
-    const { newShift: shiftData } = req.body;
-    const response = await userService.createNewShift(shiftData);
-    res.status(200).json(response);
-  } catch (err) {
-    res.status(401).json(err.message);
-  }
-});
-
 router.route("/:id/update").patch(async (req, res) => {
   try {
-    const { id, updatedInfo } = req.body;
+    const { id } = req.params;
+    const { updatedInfo } = req.body;
     const { firstName, lastName } = updatedInfo;
     const updateResponse = await userService.updateUser({
       id,
@@ -46,8 +36,5 @@ router.route("/:id/update").patch(async (req, res) => {
     res.status(401).json(err.message);
   }
 });
-router.route("/removeShift/:id").delete(async (req, res) => {
-  const response = await userService.deleteShift(req.params.id);
-  res.status(200).json(response);
-});
+
 module.exports = router;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserInfo } from "../../Context/actions/userAction";
 import { useNavigate, useParams } from "react-router";
@@ -7,20 +7,17 @@ import {
   startLoadingData,
 } from "../../Context/actions/userAction";
 
-import "../UI/UI.css";
-
 const ProfileTab = ({ props }) => {
-  console.log("ProfileTab");
   const navigate = useNavigate();
   const [editedForm, setEditedForm] = useState({
-    firstName: props.employee.firstName,
-    lastName: props.employee.lastName,
+    firstName: props.firstName,
+    lastName: props.lastName,
   });
   const { auth } = useSelector((state) => state.auth);
   const { id } = useParams();
   const prevForm = useRef({
-    firstName: props.employee.firstName,
-    lastName: props.employee.lastName,
+    firstName: props.firstName,
+    lastName: props.lastName,
     submitted: false,
   });
   const [allowEdit, setAllowEdit] = useState(true);
@@ -52,46 +49,42 @@ const ProfileTab = ({ props }) => {
     dispatch(endLoadingData());
   };
 
-  useEffect(() => {
-    sessionStorage.setItem("viewingTab", JSON.stringify("Profile"));
-  }, []);
-
   return (
-    <div className="py-20">
+    <div className="py-20 h-full">
+      <div className="float-right mr-24 lg:mr-4 ">
+        {id === auth.id && (
+          <button
+            className="bg-gray-400 bg-opacity-60 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:ml-8 mb-1 md:ml-30"
+            type="button"
+            style={{ transition: "all .15s ease" }}
+            onClick={allowEditFormHandler}
+          >
+            Edit Profile
+          </button>
+        )}
+      </div>
+
       <div className="container mx-auto px-4">
         <div className="relative flex flex-col min-w-0 break-words bg-white bg-opacity-20 w-full shadow-xl rounded-lg sm:w-full">
           <div className="px-6">
             <div className="flex flex-wrap justify-center">
-              <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center sm:w-1/12">
-                <div className="relative">
-                  <img
-                    src="https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_640.png"
-                    alt="user-avatar"
-                    className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 lg:ml-[90px] md:-ml-[70px] xl:ml-[130px] 2xl:ml-[170px] -ml-[75px]"
-                    style={{ maxWidth: "150px" }}
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                <div className="py-6 px-3 mt-32 sm:mt-0">
-                  {id === auth.id && (
-                    <button
-                      className="bg-gray-900 bg-opacity-60 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:ml-8 mb-1 md:ml-30"
-                      type="button"
-                      style={{ transition: "all .15s ease" }}
-                      onClick={allowEditFormHandler}
-                    >
-                      Edit Profile
-                    </button>
-                  )}
-                </div>
+              <div className="text-center">
+                <img
+                  src="https://tecdn.b-cdn.net/img/new/avatars/5.webp"
+                  className="mb-4 w-32 rounded-lg "
+                  alt="Avatar"
+                />
               </div>
             </div>
             <div className="text-center p-3 flex flex-col items-center">
               <input
                 id="firstName"
                 type="text"
-                className="text-[24px] bg-gray-900 text-center bg-opacity-10 font-semibold leading-normal mt-2 mb-2 text-glow mb-2 w-full lg:w-auto sm:w-10/12"
+                className={
+                  !allowEdit
+                    ? "text-[24px] bg-gray-200 text-center font-semibold leading-normal mt-2 mb-2 text-black mb-2 w-full lg:w-auto sm:w-10/12"
+                    : "text-[24px] bg-gray-900 text-center bg-opacity-10 font-semibold leading-normal mt-2 mb-2 text-glow mb-2 w-full lg:w-auto sm:w-10/12"
+                }
                 value={editedForm.firstName}
                 onChange={editFormChangeHandler}
                 disabled={allowEdit}
@@ -100,7 +93,11 @@ const ProfileTab = ({ props }) => {
               <input
                 id="lastName"
                 type="text"
-                className="text-[24px] bg-gray-900 text-center bg-opacity-10 font-semibold leading-normal mt-2 mb-2 text-glow mb-2 w-full lg:w-auto sm:w-10/12"
+                className={
+                  !allowEdit
+                    ? "text-[24px] bg-gray-200 text-center font-semibold leading-normal mt-2 mb-2 text-black mb-2 w-full lg:w-auto sm:w-10/12"
+                    : "text-[24px] bg-gray-900 text-center bg-opacity-10 font-semibold leading-normal mt-2 mb-2 text-glow mb-2 w-full lg:w-auto sm:w-10/12"
+                }
                 value={editedForm.lastName}
                 onChange={editFormChangeHandler}
                 disabled={allowEdit}
@@ -117,9 +114,9 @@ const ProfileTab = ({ props }) => {
                 </button>
               )}
               <div className="mb-2 text-white mt-2 text-glow">
-                {props?.employee?.department?.name} -{" "}
+                {props?.department?.name} -{" "}
                 <span className="text-glow">
-                  Since {props?.employee?.startWorkingYear}
+                  Since {props?.startWorkingYear}
                 </span>
               </div>
             </div>

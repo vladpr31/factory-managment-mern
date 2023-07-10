@@ -1,4 +1,5 @@
 const Employee = require("../models/employeeModal");
+require("../models/departmentModal");
 
 const createNewEmployee = (employee) => {
   try {

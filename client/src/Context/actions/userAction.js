@@ -5,8 +5,7 @@ import {
   REFRESH_SESSION,
   LOGOUT,
   FETCH_ALL,
-  NEW_SHIFT,
-  DELETE_SHIFT,
+  SET_SHIFTS,
 } from "../actionTypes/actionTypes";
 import * as API from "../../api/axios";
 
@@ -17,7 +16,9 @@ export const getUser = (id, location) => async (dispatch) => {
     await tokenExpired(location, dispatch);
   } else {
     const data = response.data;
+    const employeeShifts = data.shifts;
     dispatch({ type: SET_USER, data });
+    dispatch({ type: SET_SHIFTS, employeeShifts });
   }
 };
 
@@ -43,32 +44,12 @@ export const updateUserInfo =
     }
   };
 
-export const createNewShift = (id, newShift, location) => async (dispatch) => {
-  const response = await API.createNewShift(id, newShift);
-  if (response == "jwt expired") {
-    await tokenExpired(location, dispatch);
-  } else {
-    const data = response.data;
-    dispatch({ type: NEW_SHIFT, data });
-  }
-};
-
-export const deleteShift = (shiftID, location) => async (dispatch) => {
-  const response = await API.deleteShift(shiftID);
-  if (response == "jwt expired") {
-    await tokenExpired(location, dispatch);
-  } else {
-    const data = response.data;
-    dispatch({ type: DELETE_SHIFT, data });
-  }
-};
-
-const tokenExpired = async (location, dispatch) => {
+export const tokenExpired = async (location, dispatch) => {
   console.log("in token expired function");
   const tokens = JSON.parse(localStorage.getItem("profile"));
-  const { data } = await API.refreshSession(tokens);
-  if (data !== "Need To Login Again") {
-    console.log("nope went to the if");
+  const response = await API.refreshSession(tokens);
+  if (response !== "Need To Login Again") {
+    const { data } = response;
     dispatch({ type: REFRESH_SESSION, data });
     endLoadingData();
     location(`/user/${data.id}`);
