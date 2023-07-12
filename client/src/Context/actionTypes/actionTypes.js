@@ -10,3 +10,4 @@ export const DELETE_SHIFT = "DELTE_SHIFT";
 export const START_LOADING = "START_LOADING";
 export const END_LOADING = "END_LOADING";
 export const SET_SHIFTS = "SET_SHIFTS";
+export const REMOVE_SHIFTS = "REMOVE_SHIFTS";

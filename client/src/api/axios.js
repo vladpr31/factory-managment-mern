@@ -60,6 +60,10 @@ export const deleteShift = (shiftID) => {
   return API.delete(`shifts/removeShift/${shiftID}`);
 };
 
-export const getShiftData = (shiftID) => {
+export const getShiftDataByID = (shiftID) => {
   return API.get(`/shifts/${shiftID}`);
+};
+
+export const getShiftDataByDate = (shiftDate) => {
+  return API.get(`/shifts/shiftByDate`, shiftDate);
 };

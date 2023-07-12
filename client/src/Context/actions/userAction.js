@@ -6,6 +6,7 @@ import {
   LOGOUT,
   FETCH_ALL,
   SET_SHIFTS,
+  REMOVE_SHIFTS,
 } from "../actionTypes/actionTypes";
 import * as API from "../../api/axios";
 
@@ -55,6 +56,7 @@ export const tokenExpired = async (location, dispatch) => {
     location(`/user/${data.id}`);
   } else {
     dispatch({ type: LOGOUT });
+    dispatch({ type: REMOVE_SHIFTS });
     location("/login");
     alert("Session Expired");
   }

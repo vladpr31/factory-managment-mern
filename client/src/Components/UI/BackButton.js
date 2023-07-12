@@ -10,18 +10,16 @@ const BackButton = ({ props }) => {
   if (!auth?.id) {
     return null;
   }
-  return (
+  return props !== auth.id ? (
     <button
       onClick={clickHandler}
       className={
-        props == auth.id
-          ? "invisible"
-          : "mx-auto text-black relative flex justify-center items-center underline text-glow"
+        "mx-auto  relative flex justify-center items-center underline text-glow"
       }
     >
-      Back To Profile
+      Back To Your Profile
     </button>
-  );
+  ) : null;
 };
 
 export default BackButton;

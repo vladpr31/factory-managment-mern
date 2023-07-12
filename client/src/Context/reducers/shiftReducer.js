@@ -3,6 +3,7 @@ import {
   DELETE_SHIFT,
   UPDATE_SHIFT,
   SET_SHIFTS,
+  REMOVE_SHIFTS,
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -25,10 +26,12 @@ const userReducer = (state = initialState, action) => {
     case UPDATE_SHIFT:
       return {
         ...state,
-        posts: state?.shifts?.map((shift) =>
+        shifts: state?.shifts?.map((shift) =>
           shift._id === action.data._id ? action.data : shift
         ),
       };
+    case REMOVE_SHIFTS:
+      return { ...state, shift: [] };
     default:
       return state;
   }

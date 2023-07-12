@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import TabsBar from "../UI/TabsBar";
-import BackButton from "../UI/BackButton";
 import {
   endLoadingData,
   getUser,
@@ -33,9 +32,8 @@ const ProfilePage = () => {
   return isLoading ? (
     <h1>Loading...</h1>
   ) : (
-    <div className="min-h-screen w-full h-full ">
+    <div className="flex flex-col w-full h-full">
       <TabsBar props={{ employee }} />
-      <BackButton props={id} />
     </div>
   );
 };

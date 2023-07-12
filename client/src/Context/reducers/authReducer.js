@@ -16,7 +16,7 @@ const authReducer = (state = initialState, action) => {
       return { ...state, auth: action.data };
     case LOGOUT:
       localStorage.removeItem("profile");
-      sessionStorage.removeItem("viewingTab");
+
       return { ...state, auth: null };
 
     case REFRESH_SESSION:

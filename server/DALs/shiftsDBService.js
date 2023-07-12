@@ -15,12 +15,7 @@ const createNewShift = async (shift) => {
   }
 };
 
-const getShiftWorkers = async (shiftID) => {
-  const shift = await Shifts.findById(id);
-  return shift.shiftWorkers;
-};
-
-const getShiftInformation = (shiftID) => {
+const getShiftInformationByID = (shiftID) => {
   return Shifts.findById(shiftID);
 };
 
@@ -29,15 +24,22 @@ const deleteShift = (shiftID) => {
 };
 
 const updateShift = (shiftID, newShift) => {
-  Shifts.findByIdAndUpdate(shiftID, newShift);
-  return "Shift Is Updated.";
+  Shifts.findByIdAndUpdate({ _id: shiftID.id }, newShift, {
+    upsert: false,
+    new: true,
+  })
+    .then((result) => console.log(result))
+    .catch((err) => console.log(err.message));
 };
 
+const getShiftInformationByDate = (shiftDate) => {
+  return Shifts.findOne({ date: shiftDate });
+};
 module.exports = {
   getAllShifts,
-  getShiftInformation,
-  getShiftWorkers,
+  getShiftInformationByID,
   updateShift,
   deleteShift,
   createNewShift,
+  getShiftInformationByDate,
 };

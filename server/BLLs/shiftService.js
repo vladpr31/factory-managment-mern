@@ -15,7 +15,12 @@ const createNewShift = async (payload) => {
 };
 const updateExistingShift = async (payload) => {
   try {
-    console.log(payload);
+    const updatedShift = await ShiftsDAL.updateShift(
+      payload.id,
+      payload.updatedShift
+    );
+
+    return updatedShift;
   } catch (err) {
     return err.message;
   }
@@ -30,10 +35,17 @@ const deleteShift = async (payload) => {
   }
 };
 
-const getShift = async (payload) => {
+const getShiftByID = async (payload) => {
   try {
-    const shift = await ShiftsDAL.getShiftInformation(payload);
-
+    const shift = await ShiftsDAL.getShiftInformationByID(payload);
+    return shift;
+  } catch (err) {
+    return err.message;
+  }
+};
+const getShiftByDate = async (payload) => {
+  try {
+    const shift = await ShiftsDAL.getShiftInformationByDate(payload);
     return shift;
   } catch (err) {
     return err.message;
@@ -43,5 +55,6 @@ module.exports = {
   createNewShift,
   updateExistingShift,
   deleteShift,
-  getShift,
+  getShiftByID,
+  getShiftByDate,
 };

@@ -13,10 +13,7 @@ const Input = ({ props }) => {
         required={props.required}
         id={props.id}
         onChange={props.onChangeHandler}
-        value={props.inputValue ? props.inputValue : null}
-        min={
-          props.type === "shiftDate" ? new Date().toLocaleDateString() : null
-        }
+        value={props.inputValue ? props.inputValue : ""}
       />
     </>
   );

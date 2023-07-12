@@ -19,6 +19,13 @@ router.route("/removeShift/:id").delete(async (req, res) => {
 
 router.route("/updateShift/:id").post(async (req, res) => {
   try {
+    const id = req.params;
+    const { updatedShift } = req.body;
+    const response = await shiftService.updateExistingShift({
+      id,
+      updatedShift,
+    });
+    res.status(200).json(response);
   } catch (err) {
     res.status(401).json(err.message);
   }
@@ -27,7 +34,17 @@ router.route("/updateShift/:id").post(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
   try {
     const { id } = req.params;
-    const response = await shiftService.getShift(id);
+    const response = await shiftService.getShiftByID(id);
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(401).json(err.message);
+  }
+});
+
+router.route("/shiftByDate").get(async (req, res) => {
+  try {
+    const { date } = req.body;
+    const response = await shiftService.getShiftByDate(date);
     res.status(200).json(response);
   } catch (err) {
     res.status(401).json(err.message);

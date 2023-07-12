@@ -14,9 +14,9 @@ export const createNewShift = (newShift, location) => async (dispatch) => {
     dispatch({ type: NEW_SHIFT, data });
   }
 };
-export const getShiftData = (shiftID, location) => async (dispatch) => {
+export const getShiftDataByID = (shiftID, location) => async (dispatch) => {
   console.log(shiftID);
-  const response = await API.getShiftData(shiftID);
+  const response = await API.getShiftDataByID(shiftID);
   if (response == "jwt expired") {
     await tokenExpired(location, dispatch);
   } else {
@@ -27,7 +27,7 @@ export const getShiftData = (shiftID, location) => async (dispatch) => {
 
 export const updateShift =
   (shiftID, updatedShift, location) => async (dispatch) => {
-    const response = await API.updateShift({ shiftID, updatedShift });
+    const response = await API.updateShift(shiftID, updatedShift);
     if (response == "jwt expired") {
       await tokenExpired(location, dispatch);
     } else {
@@ -35,6 +35,10 @@ export const updateShift =
       dispatch({ type: UPDATE_SHIFT, data });
     }
   };
+
+export const getShiftByDate = (date, location) => async (dispatch) => {
+  const response = await API.getShiftDataByDate(date);
+};
 
 export const deleteShift = (shiftID, location) => async (dispatch) => {
   const response = await API.deleteShift(shiftID);
