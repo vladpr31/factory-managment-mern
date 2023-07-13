@@ -15,6 +15,6 @@ export const signIn = (formInputs, location, next) => async (dispatch) => {
 };
 
 export const signOut = (location) => (dispatch) => {
-  location("/", { replace: true });
   dispatch({ type: LOGOUT });
+  location("/", { replace: true });
 };

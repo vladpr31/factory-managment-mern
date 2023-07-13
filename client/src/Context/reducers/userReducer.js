@@ -3,9 +3,6 @@ import {
   START_LOADING,
   END_LOADING,
   FETCH_ALL,
-  NEW_SHIFT,
-  DELETE_SHIFT,
-  UPDATE_SHIFT,
 } from "../actionTypes/actionTypes";
 
 const initialState = {

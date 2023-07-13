@@ -10,8 +10,8 @@ const WorkersTab = () => {
   return isLoading ? (
     <h1>Loading Data...</h1>
   ) : (
-    <div className="mx-auto flex flex-wrap w-[50%] justify-center py-20 sm: w-[75%] h-screen ">
-      <h1 className="text-center p-5 text-[48px] sm: text-[24px] text-glow">
+    <div className="mx-auto flex flex-wrap w-[50%] justify-center sm: w-[75%] h-full ">
+      <h1 className="text-center py-5 text-[48px] sm: text-[24px] text-glow">
         All Workers List
       </h1>
       <table className="table-auto border-2 border-black w-full shadow-2xl ">
@@ -40,10 +40,10 @@ const WorkersTab = () => {
                     {employee.firstName + " " + employee.lastName}
                   </a>
                 </td>
-                <td className="border-2 border-black text-center bg-gray-400 bg-opacity-30 text-white lg:w-fit sm:w-full p-4">
+                <td className="border-2 border-black text-center bg-gray-400 bg-opacity-30 text-white lg:w-fit sm:w-full ">
                   {employee.department.name}
                 </td>
-                <td className="border-2 border-black text-center bg-gray-400 bg-opacity-30 text-white lg:w-fit sm:w-full p-4">
+                <td className="border-2 border-black text-center bg-gray-400 bg-opacity-30 text-white lg:w-fit sm:w-full ">
                   {employee.firstName !==
                     employee.department.manager.firstName &&
                   employee.lastName !== employee.department.manager.lastName ? (

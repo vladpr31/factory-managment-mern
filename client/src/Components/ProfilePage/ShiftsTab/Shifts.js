@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Select from "react-select";
 import {
   createNewShift,
@@ -13,7 +12,8 @@ import {
 } from "../../../Context/actions/userAction";
 import DatePickerComp from "../../UI/DatePicker";
 import { TEInput, TERipple } from "tw-elements-react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 const Shifts = ({ props }) => {
   const [showForm, setShowForm] = useState(false);
   const { allUsers, user } = useSelector((state) => state.user);
@@ -106,15 +106,131 @@ const Shifts = ({ props }) => {
   };
 
   //dispatches the shit update.
-  const updateShiftHandler = async () => {
+  const updateShiftHandler = () => {
     dispatch(startLoadingData());
     shift.shiftCreator = user._id;
-    await dispatch(updateShift(props.currShiftEdited[0]._id, shift, navigate));
+    dispatch(updateShift(props.currShiftEdited[0]._id, shift, navigate));
     dispatch(endLoadingData());
   };
-  console.log(props.allowEditShift);
   return (
-    <div className="relative mx-auto w-full p-2">
+    <div className="py-2">
+      <button
+        className="bg-gradient-to-r from-[#08b6f0] to-[#ce0ce8] bg-opacity-30 border-[1.5px] border-white text-glow px-6 py-3 rounded  mx-auto w-fit"
+        type="button"
+        onClick={() => setShowForm(true)}
+      >
+        Create New Shift
+      </button>
+      {(showForm && !props.allowEditShift) ||
+      (!showForm && props.allowEditShift) ? (
+        <>
+          <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto bg-gray-900 bg-opacity-70 fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-gray-500 bg-opacity-70 outline-none focus:outline-none">
+                <div className="flex items-start justify-end p-5 border-b border-solid border-blue-300 rounded-t ">
+                  <button
+                    className="bg-transparent float-right"
+                    onClick={() => setShowForm(!showForm)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCircleXmark}
+                      size="xl"
+                      style={{
+                        color: "#08b6f0",
+                        backgroundColor: "white",
+                      }}
+                      className="rounded-full border-[2px] border-[#08b6f0]"
+                    />
+                  </button>
+                </div>
+                <div className="relative p-6 flex-auto">
+                  <form className="bg-gray-700 bg-opacity-70 shadow-md rounded px-12 pt-6 pb-8 w-full">
+                    <DatePickerComp props={{ newShiftHandler }} />
+                    {shift.date ? (
+                      <>
+                        <label className="text-glow">Shift Start Time:</label>
+                        <TEInput
+                          type="time"
+                          className="mb-6 text-glow text-center"
+                          onChange={newShiftHandler}
+                          id="startTime"
+                        />
+                      </>
+                    ) : null}
+                    {shift.startingHour ? (
+                      <>
+                        <label className="text-glow">Shift End Time:</label>
+                        <TEInput
+                          type="time"
+                          className="mb-6 text-glow text-center"
+                          onChange={newShiftHandler}
+                          id="endTime"
+                        />
+                      </>
+                    ) : null}
+                    {shift.endingHour ? (
+                      <TERipple
+                        rippleUnbound
+                        rippleRadius={30}
+                        className="h-fit mb-4 w-full"
+                      >
+                        <label className="text-glow">Shift Workers</label>
+                        <Select
+                          className="text-black"
+                          isMulti
+                          options={selectOptions}
+                          onChange={newShiftHandler}
+                          defaultValue={
+                            props.currShiftEdited
+                              ? selectOptions.filter(
+                                  (option, index) =>
+                                    option.value ===
+                                    props?.currShiftEdited[0]?.shiftWorkers[
+                                      index
+                                    ]?._id
+                                )
+                              : "Select.."
+                          }
+                          styles={{
+                            multiValue: (baseStyles, state) => ({
+                              ...baseStyles,
+                              backgroundColor: state.isSelected
+                                ? "gray"
+                                : "red",
+                            }),
+                          }}
+                        />
+                      </TERipple>
+                    ) : null}
+                  </form>
+                </div>
+                <div className="flex items-center justify-center p-6 border-t border-solid border-blue rounded-b">
+                  <button
+                    className="block w-full rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white "
+                    type="button"
+                    onClick={
+                      props?.allowEditShift
+                        ? updateShiftHandler
+                        : createNewShiftHandler
+                    }
+                  >
+                    {props?.allowEditShift ? "Update Shift" : "Create Shift"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+};
+
+export default React.memo(Shifts);
+
+/** 
+return (
+    <div className="relative mx-auto w-full">
       <button
         className="text-white bg-blue-700 rounded-md p-4"
         type="button"
@@ -127,7 +243,7 @@ const Shifts = ({ props }) => {
         <>
           <div className="flex flex-col justify-between mt-6 bg-gray-300 p-4 bg-opacity-20 rounded-xl mb-2">
             <form>
-              <div className="grid grid-rows-3 grid-flow-col gap-4">
+              <div className="grid grid-rows-2 grid-flow-col gap-4">
                 <div className="row-span-3">
                   <DatePickerComp props={{ newShiftHandler }} />
                   {shift.date ? (
@@ -154,15 +270,15 @@ const Shifts = ({ props }) => {
                     </>
                   ) : null}
                 </div>
-                <div className="col-span-2">
+                <div className="grid-col-1 w-[75%]">
                   <TERipple
                     rippleUnbound
                     rippleRadius={30}
-                    className="w-full h-fit mb-6"
+                    className="h-fit mb-4"
                   >
                     <label className="text-glow">Shift Workers</label>
                     <Select
-                      className="text-black "
+                      className="text-black w-fit "
                       isMulti
                       options={selectOptions}
                       onChange={newShiftHandler}
@@ -205,6 +321,4 @@ const Shifts = ({ props }) => {
       ) : null}
     </div>
   );
-};
-
-export default React.memo(Shifts);
+*/

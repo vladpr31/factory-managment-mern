@@ -16,7 +16,8 @@ const createNewShift = async (shift) => {
 };
 
 const getShiftInformationByID = (shiftID) => {
-  return Shifts.findById(shiftID);
+  const { id } = shiftID;
+  return Shifts.findById({ _id: id });
 };
 
 const deleteShift = (shiftID) => {
@@ -24,12 +25,10 @@ const deleteShift = (shiftID) => {
 };
 
 const updateShift = (shiftID, newShift) => {
-  Shifts.findByIdAndUpdate({ _id: shiftID.id }, newShift, {
+  return Shifts.findByIdAndUpdate({ _id: shiftID.id }, newShift, {
     upsert: false,
     new: true,
-  })
-    .then((result) => console.log(result))
-    .catch((err) => console.log(err.message));
+  });
 };
 
 const getShiftInformationByDate = (shiftDate) => {

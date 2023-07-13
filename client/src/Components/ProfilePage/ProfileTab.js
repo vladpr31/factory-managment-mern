@@ -50,7 +50,7 @@ const ProfileTab = ({ props }) => {
   };
 
   return (
-    <div className="py-20 h-full">
+    <div className="h-full">
       <div className="float-right mr-24 lg:mr-4 ">
         {id === auth.id && (
           <button
@@ -76,7 +76,7 @@ const ProfileTab = ({ props }) => {
                 />
               </div>
             </div>
-            <div className="text-center p-3 flex flex-col items-center">
+            <div className="text-center flex flex-col items-center">
               <input
                 id="firstName"
                 type="text"

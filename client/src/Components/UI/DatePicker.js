@@ -19,6 +19,7 @@ const DatePickerComp = ({ props }) => {
         placeholderText="Day-Month-Year"
         dateFormat="dd/MM/yyyy"
         minDate={new Date(Date.now())}
+        className="text-black text-center"
       />
     </div>
   );

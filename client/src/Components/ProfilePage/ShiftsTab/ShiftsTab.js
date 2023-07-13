@@ -13,7 +13,7 @@ import {
 
 const ShiftsTab = ({ props }) => {
   const { auth } = useSelector((state) => state.auth);
-  const { isLoading } = useSelector((state) => state.user);
+  const { isLoading, user } = useSelector((state) => state.user);
   const { shifts } = useSelector((state) => state.shifts);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const ShiftsTab = ({ props }) => {
 
   if (props?.shifts?.length > 0) {
     return (
-      <div className="mx-auto flex flex-wrap w-[50%] justify-center sm: w-[75%] h-screen ">
+      <div className="mx-auto flex flex-wrap w-[50%] justify-center sm: w-[75%] h-full ">
         <h1 className="text-center py-5 text-glow sm:text-[19px] md:text-[42px] lg:text-[48px] xl:text-[48px]">
           Current Shifts
         </h1>
@@ -78,8 +78,8 @@ const ShiftsTab = ({ props }) => {
                   ))}
                 </td>
                 <td className="text-center">
-                  {shift.shiftCreator == auth.id &&
-                  props?.department?.manager?._id === auth?.id ? (
+                  {shift.shiftCreator == user?._id &&
+                  props?.department?.manager?._id === user?._id ? (
                     <button
                       className="ml-2"
                       onClick={() => deleteShiftHandler(shift._id)}
@@ -92,8 +92,8 @@ const ShiftsTab = ({ props }) => {
                   ) : null}
                 </td>
                 <td className="text-center">
-                  {shift.shiftCreator == auth.id &&
-                  props?.department?.manager?._id === auth?.id ? (
+                  {shift.shiftCreator == user?._id &&
+                  props?.department?.manager?._id === user?._id ? (
                     <button
                       className="ml-2 "
                       onClick={() => allowEditShiftHandler(shift._id)}
@@ -109,16 +109,14 @@ const ShiftsTab = ({ props }) => {
             ))}
           </tbody>
         </table>
-        {props?.firstName === props?.department?.manager?.firstName &&
-        props?.lastName === props?.department?.manager?.lastName &&
-        props?.department?.manager?._id === auth?.id ? (
+        {props?.department?.manager?._id === user?._id ? (
           <Shifts props={{ allowEditShift, currShiftEdited }} />
         ) : null}
       </div>
     );
   } else {
     return (
-      <div className="text-center flex justify-center text-glow h-full">
+      <div className="text-center flex flex-col justify-center text-glow h-full">
         <h1 className="text-[48px]">No Shifts Available Yet</h1>
         {props?.firstName === props?.department?.manager?.firstName &&
         props?.lastName === props?.department?.manager?.lastName &&

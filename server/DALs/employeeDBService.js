@@ -51,15 +51,17 @@ const deleteEmployee = (id) => {
   Employee.findByIdAndDelete(id);
   return "Employee Has Been Deleted";
 };
-const updateEmployeeShifts = (id, shift) => {
+const addEmployeeShifts = (id, shift) => {
   return Employee.findByIdAndUpdate(
     { _id: id },
-    { $push: { shifts: shift } }
-  ).then((updated) => {
-    return updated;
-  });
+    { $addToSet: { shifts: shift } }
+  )
+    .then((updated) => {
+      console.log("addshiftsemployee:", updated);
+    })
+    .catch((err) => console.log(err.message));
 };
-const updateEmployee = (id, employeeInfo) => {
+const updateEmployeeName = (id, employeeInfo) => {
   return Employee.findByIdAndUpdate(
     { _id: id },
     { firstName: employeeInfo.firstName, lastName: employeeInfo.lastName },
@@ -70,6 +72,7 @@ const updateEmployee = (id, employeeInfo) => {
 };
 
 const deleteManyEmployeeShifts = (shiftID) => {
+  console.log("deleteMany", shiftID);
   return Employee.updateMany(
     {},
     { $pull: { shifts: { $in: [shiftID] } } },
@@ -79,12 +82,20 @@ const deleteManyEmployeeShifts = (shiftID) => {
   });
 };
 
+const deleteSpecificShiftFromEmployee = (shiftID, userID) => {
+  Employee.findByIdAndUpdate(
+    userID,
+    { $pull: { shifts: { $in: [shiftID] } } },
+    { upsert: false, new: true }
+  ).then((result) => console.log());
+};
 module.exports = {
   createNewEmployee,
   getEmployeeByID,
   deleteEmployee,
-  updateEmployee,
+  updateEmployeeName,
   getAllEmployees,
-  updateEmployeeShifts,
+  addEmployeeShifts,
   deleteManyEmployeeShifts,
+  deleteSpecificShiftFromEmployee,
 };

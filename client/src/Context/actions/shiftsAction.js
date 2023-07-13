@@ -45,7 +45,6 @@ export const deleteShift = (shiftID, location) => async (dispatch) => {
   if (response == "jwt expired") {
     await tokenExpired(location, dispatch);
   } else {
-    const data = response.data;
-    dispatch({ type: DELETE_SHIFT, data });
+    dispatch({ type: DELETE_SHIFT, shiftID });
   }
 };

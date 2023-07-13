@@ -19,8 +19,8 @@ const userReducer = (state = initialState, action) => {
     case DELETE_SHIFT:
       return {
         ...state,
-        shifts: state.shifts.filter(
-          (shift) => shift._id !== action.employeeShifts._id
+        shifts: state?.shifts?.filter(
+          (shift) => shift?._id !== action?.shiftID
         ),
       };
     case UPDATE_SHIFT:

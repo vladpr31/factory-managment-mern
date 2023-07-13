@@ -28,7 +28,7 @@ const getUserByID = async (payload) => {
 const updateUser = (payload) => {
   const { id, firstName, lastName } = payload;
   try {
-    const updatedEmployee = EmployeeDAL.updateEmployee(id, {
+    const updatedEmployee = EmployeeDAL.updateEmployeeName(id, {
       firstName,
       lastName,
     });
