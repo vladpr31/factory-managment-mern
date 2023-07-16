@@ -47,10 +47,14 @@ const getEmployeeByID = (id) => {
     console.log(err);
   }
 };
+//deletes employee.
 const deleteEmployee = (id) => {
   Employee.findByIdAndDelete(id);
   return "Employee Has Been Deleted";
 };
+//adds a shift to an employee by ID, using $addToSet incase employee already has that shift.
+// mostly for the "edit shift" options since if i have 3 employee and i remove 1, it was duplicating the shifts for
+// the other 2 employees.
 const addEmployeeShifts = (id, shift) => {
   return Employee.findByIdAndUpdate(
     { _id: id },
@@ -61,6 +65,8 @@ const addEmployeeShifts = (id, shift) => {
     })
     .catch((err) => console.log(err.message));
 };
+
+//updated employee First Name and Last Name.
 const updateEmployeeName = (id, employeeInfo) => {
   return Employee.findByIdAndUpdate(
     { _id: id },
@@ -71,6 +77,8 @@ const updateEmployeeName = (id, employeeInfo) => {
   });
 };
 
+//removes shifts for many employees, basically for the "delte shift".
+// the shift being deleted from all employee tables.
 const deleteManyEmployeeShifts = (shiftID) => {
   console.log("deleteMany", shiftID);
   return Employee.updateMany(
@@ -81,13 +89,13 @@ const deleteManyEmployeeShifts = (shiftID) => {
     return result;
   });
 };
-
+// deletes a shift for a specific employee, for edit shift if i remove 1 employee.
 const deleteSpecificShiftFromEmployee = (shiftID, userID) => {
   Employee.findByIdAndUpdate(
     userID,
     { $pull: { shifts: { $in: [shiftID] } } },
     { upsert: false, new: true }
-  ).then((result) => console.log());
+  ).then((result) => console.log(result));
 };
 module.exports = {
   createNewEmployee,

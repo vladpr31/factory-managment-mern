@@ -101,13 +101,17 @@ const Sidebar = ({ props }) => {
 
             <TETabsContent>
               <TETabsPane show={justifyActive === "tab1"}>
-                <ProfileTab props={props.employee} />
+                {justifyActive === "tab1" ? (
+                  <ProfileTab props={props.employee} />
+                ) : null}
               </TETabsPane>
               <TETabsPane show={justifyActive === "tab2"}>
-                <ShiftsTab props={props.employee} />
+                {justifyActive === "tab2" ? (
+                  <ShiftsTab props={props.employee} />
+                ) : null}
               </TETabsPane>
               <TETabsPane show={justifyActive === "tab3"}>
-                <WorkersTab />
+                {justifyActive === "tab3" ? <WorkersTab /> : null}
               </TETabsPane>
               <TETabsPane show={justifyActive === "tab4"} tag="button">
                 Log-Out

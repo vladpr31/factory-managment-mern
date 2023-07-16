@@ -22,16 +22,10 @@ const Shifts = ({ props }) => {
   const dispatch = useDispatch();
   //state of shift, if it create then all input values are emty string, if it's edit loads the data from props.
   const [shift, setShift] = useState({
-    date: props.currShiftEdited ? props?.currShiftEdited[0]?.date : "",
-    startingHour: props.currShiftEdited
-      ? props?.currShiftEdited[0]?.startingHour
-      : "",
-    endingHour: props.currShiftEdited
-      ? props?.currShiftEdited[0]?.endingHour
-      : "",
-    shiftWorkers: props.currShiftEdited
-      ? props?.currShiftEdited[0]?.shiftWorkers
-      : [{}],
+    date: "",
+    startingHour: "",
+    endingHour: "",
+    shiftWorkers: [{}],
   });
   //removes employees from selectOptions which already have a shift on that day.
   const checkEmployeeAvailability = () => {
@@ -45,24 +39,19 @@ const Shifts = ({ props }) => {
       }
     });
   };
-  //show the shift for on "Edit" or "Create".
-  const showFormHandler = () => {
-    setShowForm(!showForm);
-    if (props.currShiftEdited) {
-      props.currShiftEdited = null;
-    }
-  };
+
   //on component mount creates the select option for the select component.
   useEffect(() => {
     const selectOptions = allUsers.map((user) => ({
       value: user,
       label: `${user.firstName} ${user.lastName}`,
     }));
+
     setSelectOptions(selectOptions);
     checkEmployeeAvailability();
-  }, [shift.date]);
+  }, [shift?.date]);
   //handles the shift form input
-  const newShiftHandler = (e) => {
+  const shiftFormHandler = (e) => {
     if (e.target) {
       const { id, value } = e.target;
 
@@ -97,21 +86,21 @@ const Shifts = ({ props }) => {
     }
   };
 
-  //dispatches the new shit creation.
+  //dispatches the new shift creation.
   const createNewShiftHandler = async () => {
     dispatch(startLoadingData());
     shift.shiftCreator = user._id;
     await dispatch(createNewShift(shift, navigate));
     dispatch(endLoadingData());
   };
-
-  //dispatches the shit update.
+  //dispatches the shift update.
   const updateShiftHandler = () => {
     dispatch(startLoadingData());
     shift.shiftCreator = user._id;
     dispatch(updateShift(props.currShiftEdited[0]._id, shift, navigate));
     dispatch(endLoadingData());
   };
+  console.log(shift.date);
   return (
     <div className="py-2">
       <button
@@ -145,15 +134,27 @@ const Shifts = ({ props }) => {
                 </div>
                 <div className="relative p-6 flex-auto">
                   <form className="bg-gray-700 bg-opacity-70 shadow-md rounded px-12 pt-6 pb-8 w-full">
-                    <DatePickerComp props={{ newShiftHandler }} />
+                    <DatePickerComp
+                      props={{
+                        shiftFormHandler,
+                      }}
+                    />
                     {shift.date ? (
                       <>
                         <label className="text-glow">Shift Start Time:</label>
                         <TEInput
                           type="time"
                           className="mb-6 text-glow text-center"
-                          onChange={newShiftHandler}
+                          onChange={shiftFormHandler}
                           id="startTime"
+                          value={
+                            props.currShiftEdited
+                              ? new Date(
+                                  shift.date.split("T")[0] +
+                                    props.currShiftEdited[0].startingHour
+                                )
+                              : ""
+                          }
                         />
                       </>
                     ) : null}
@@ -163,8 +164,13 @@ const Shifts = ({ props }) => {
                         <TEInput
                           type="time"
                           className="mb-6 text-glow text-center"
-                          onChange={newShiftHandler}
+                          onChange={shiftFormHandler}
                           id="endTime"
+                          value={
+                            props.currShiftEdited
+                              ? props.currShiftEdited[0].endingHour
+                              : ""
+                          }
                         />
                       </>
                     ) : null}
@@ -179,7 +185,7 @@ const Shifts = ({ props }) => {
                           className="text-black"
                           isMulti
                           options={selectOptions}
-                          onChange={newShiftHandler}
+                          onChange={shiftFormHandler}
                           defaultValue={
                             props.currShiftEdited
                               ? selectOptions.filter(
@@ -227,98 +233,3 @@ const Shifts = ({ props }) => {
 };
 
 export default React.memo(Shifts);
-
-/** 
-return (
-    <div className="relative mx-auto w-full">
-      <button
-        className="text-white bg-blue-700 rounded-md p-4"
-        type="button"
-        onClick={showFormHandler}
-      >
-        Create New Shift
-      </button>
-      {(showForm && !props.allowEditShift) ||
-      (!showForm && props.allowEditShift) ? (
-        <>
-          <div className="flex flex-col justify-between mt-6 bg-gray-300 p-4 bg-opacity-20 rounded-xl mb-2">
-            <form>
-              <div className="grid grid-rows-2 grid-flow-col gap-4">
-                <div className="row-span-3">
-                  <DatePickerComp props={{ newShiftHandler }} />
-                  {shift.date ? (
-                    <>
-                      <label className="text-glow">Shift Start Time:</label>
-                      <TEInput
-                        type="time"
-                        className="mb-6 text-glow"
-                        onChange={newShiftHandler}
-                        id="startTime"
-                      />
-                    </>
-                  ) : null}
-
-                  {shift.startingHour ? (
-                    <>
-                      <label className="text-glow">Shift End Time:</label>
-                      <TEInput
-                        type="time"
-                        className="mb-6 text-glow"
-                        onChange={newShiftHandler}
-                        id="endTime"
-                      />
-                    </>
-                  ) : null}
-                </div>
-                <div className="grid-col-1 w-[75%]">
-                  <TERipple
-                    rippleUnbound
-                    rippleRadius={30}
-                    className="h-fit mb-4"
-                  >
-                    <label className="text-glow">Shift Workers</label>
-                    <Select
-                      className="text-black w-fit "
-                      isMulti
-                      options={selectOptions}
-                      onChange={newShiftHandler}
-                      defaultValue={
-                        props.currShiftEdited
-                          ? selectOptions.filter(
-                              (option, index) =>
-                                option.value ===
-                                props?.currShiftEdited[0]?.shiftWorkers[index]
-                                  ?._id
-                            )
-                          : "Select.."
-                      }
-                      styles={{
-                        multiValue: (baseStyles, state) => ({
-                          ...baseStyles,
-                          backgroundColor: state.isSelected ? "gray" : "red",
-                        }),
-                      }}
-                    />
-                  </TERipple>
-                </div>
-              </div>
-              <TERipple rippleColor="light" className="w-full">
-                <button
-                  className="block w-full rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]]"
-                  type="button"
-                  onClick={
-                    props?.allowEditShift
-                      ? updateShiftHandler
-                      : createNewShiftHandler
-                  }
-                >
-                  {props?.allowEditShift ? "Update Shift" : "Create Shift"}
-                </button>
-              </TERipple>
-            </form>
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
-*/

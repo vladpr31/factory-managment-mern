@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
+
+//verifyJWT, for protected routes.
+//verifies jwt tokens before allowing user to proceed with the request.
 const verifyJWT = (req, res, next) => {
   const access_token = req.headers.authorization.split(" ")[1];
   if (access_token) {

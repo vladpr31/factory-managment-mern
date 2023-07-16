@@ -1,14 +1,15 @@
 const EmployeeDAL = require("../DALs/employeeDBService");
 const UserDAL = require("../DALs/userDBService");
 
+//return all employees.
 const getAllEmployees = () => {
   return EmployeeDAL.getAllEmployees();
 };
-
+//return user by full Name.
 const getUserByName = (payload) => {
   return UserDAL.getUserByName(payload);
 };
-
+//returs user by ID, which is actualy and employee so return an employee by ID.
 const getUserByID = async (payload) => {
   try {
     const userID = payload;
@@ -25,6 +26,7 @@ const getUserByID = async (payload) => {
   }
 };
 
+//updated user info also updated the employee because they use the same info.
 const updateUser = (payload) => {
   const { id, firstName, lastName } = payload;
   try {

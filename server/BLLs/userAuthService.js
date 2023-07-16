@@ -4,17 +4,20 @@ const userService = require("../DALs/userDBService");
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
+//generates jwt access token using sercert for access token.
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.JWT_ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
 };
+//generates jwt refresh token using secret for refresh token.
 const generateRefreshToken = (user) => {
   return jwt.sign(user, process.env.JWT_REFRESH_TOKEN_SECRET, {
     expiresIn: "1h",
   });
 };
 
+//authenticates user using jsonplaceholder webservice, return access token,refresh token,user id.
 const authenticateUser = async (credentials) => {
   try {
     const { fullName, email } = credentials;
@@ -48,6 +51,8 @@ const authenticateUser = async (credentials) => {
   }
 };
 
+//send new access token when expired using refresh token, if bot expired then send "expired" which makes user forcefully logout,
+// and user needs to relogin again.
 const refreshToken = (tokens) => {
   const accessVerify = jwt.verify(
     tokens.access_token,

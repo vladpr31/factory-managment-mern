@@ -12,6 +12,7 @@ import {
 } from "../../../Context/actions/userAction";
 
 const ShiftsTab = ({ props }) => {
+  console.log("Shifts Tab");
   const { auth } = useSelector((state) => state.auth);
   const { isLoading, user } = useSelector((state) => state.user);
   const { shifts } = useSelector((state) => state.shifts);

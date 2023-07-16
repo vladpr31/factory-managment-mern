@@ -17,7 +17,7 @@ export const getUser = (id, location) => async (dispatch) => {
     await tokenExpired(location, dispatch);
   } else {
     const data = response.data;
-    const employeeShifts = data.shifts;
+    const employeeShifts = data?.shifts;
     dispatch({ type: SET_USER, data });
     dispatch({ type: SET_SHIFTS, employeeShifts });
   }

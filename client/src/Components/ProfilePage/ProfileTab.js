@@ -8,6 +8,7 @@ import {
 } from "../../Context/actions/userAction";
 
 const ProfileTab = ({ props }) => {
+  console.log("Profile Tab");
   const navigate = useNavigate();
   const [editedForm, setEditedForm] = useState({
     firstName: props.firstName,

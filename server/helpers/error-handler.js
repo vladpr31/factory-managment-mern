@@ -1,3 +1,4 @@
+//error handlers.
 const authErrorHandler = (result) => {
   switch (result) {
     case "USER_ERROR":
